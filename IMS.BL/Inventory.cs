@@ -7,10 +7,10 @@ namespace IMS.BL
     {
         static Inventory()
         {
-            _productsIdsList = new List<Product>();
+            ProductsList = new List<Product>();
         }
 
-        private static List<Product> _productsIdsList;
+        public static List<Product> ProductsList { get; private set; }
 
         public static Product AddNewProduct()
         {
@@ -44,7 +44,7 @@ namespace IMS.BL
 
             };
             
-            _productsIdsList.Add(product);
+            ProductsList.Add(product);
 
             return product;
         }
