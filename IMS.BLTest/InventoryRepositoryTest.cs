@@ -19,7 +19,7 @@ namespace IMS.BLTest
             Console.SetIn(reader);
             Inventory.AddNewProduct();
             
-            var stringProductList = new InventoryRepository().RetrieveAllProducts();
+            var stringProductList = InventoryRepository.RetrieveAllProducts();
 
             // -- Act.
             const string productStringOne =
@@ -36,6 +36,41 @@ namespace IMS.BLTest
                 stringProductList[1],
                 productStringTwo
             );
+        }
+
+        [Test]
+        public void RetrieveOneProductByNameValid()
+        {
+            // -- Arrange.
+            const string productName = "Computer";
+            const decimal productPrice = 1890.50M;
+            const int productQuantity = 13;
+            
+            var reader = new System.IO.StringReader($"{productName}\n{productPrice}\n{productQuantity}\n");
+            Console.SetIn(reader);
+            var product = Inventory.AddNewProduct();
+
+            var responseString = InventoryRepository.RetrieveOneProduct("Computer");
+            
+            // -- Act.
+            var expected = $"Product num: {product.ProductId}, got a name of: {product.ProductName}, costs: {product.ProductPrice}, and we've got: {product.ProductQuantity} of it!";
+            
+            // -- Assert.
+            Assert.AreEqual(expected, responseString);
+        }
+        
+        
+        [Test]
+        public void RetrieveOneProductByNameInvalid()
+        {
+            // -- Arrange.
+            var responseString = InventoryRepository.RetrieveOneProduct("");
+            
+            // -- Act.
+            const string expected = "The product you are searching for doesn't exist on the inventory store!";
+            
+            // -- Assert.
+            Assert.AreEqual(expected, responseString);
         }
     }
 }
