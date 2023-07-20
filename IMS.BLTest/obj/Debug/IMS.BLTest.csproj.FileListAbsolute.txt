@@ -1,0 +1,11 @@
+/home/moustf/loving_backend/c#/IMS/IMS.BLTest/bin/Debug/IMS.BLTest.dll
+/home/moustf/loving_backend/c#/IMS/IMS.BLTest/bin/Debug/IMS.BLTest.pdb
+/home/moustf/loving_backend/c#/IMS/IMS.BLTest/bin/Debug/IMS.BL.exe
+/home/moustf/loving_backend/c#/IMS/IMS.BLTest/bin/Debug/nunit.framework.dll
+/home/moustf/loving_backend/c#/IMS/IMS.BLTest/bin/Debug/IMS.BL.pdb
+/home/moustf/loving_backend/c#/IMS/IMS.BLTest/bin/Debug/nunit.framework.xml
+/home/moustf/loving_backend/c#/IMS/IMS.BLTest/obj/Debug/IMS.BLTest.csproj.AssemblyReference.cache
+/home/moustf/loving_backend/c#/IMS/IMS.BLTest/obj/Debug/IMS.BLTest.csproj.CoreCompileInputs.cache
+/home/moustf/loving_backend/c#/IMS/IMS.BLTest/obj/Debug/IMS.BLTest.csproj.CopyComplete
+/home/moustf/loving_backend/c#/IMS/IMS.BLTest/obj/Debug/IMS.BLTest.dll
+/home/moustf/loving_backend/c#/IMS/IMS.BLTest/obj/Debug/IMS.BLTest.pdb
