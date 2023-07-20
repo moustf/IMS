@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication.ExtendedProtection;
 
 namespace IMS.BL
 {
@@ -45,6 +46,20 @@ namespace IMS.BL
             product.ProductQuantity = productInfo.ProductQuantity;
 
             return product;
+        }
+
+        public static int RemoveProductByName(string productName)
+        {
+            var product = ProductsList.SingleOrDefault(prod => prod.ProductName == productName);
+            
+            if (product == null)
+            {
+                return -1;
+            }
+            
+            ProductsList.RemoveAt(ProductsList.FindIndex(prod => prod.ProductName == productName));
+
+            return 1;
         }
     }
 }

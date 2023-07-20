@@ -78,5 +78,43 @@ namespace IMS.BLTest
             // -- Assert.
             Assert.AreEqual(updatedProduct, null);
         }
+        
+        [Test]
+        public void RemoveProductByProductNameValid()
+        {
+            // -- Arrange.
+            const string productName = "Shorts";
+            const decimal productPrice = 12.50M;
+            const int productQuantity = 3;
+            var reader = new System.IO.StringReader($"{productName}\n{productPrice}\n{productQuantity}\n");
+            Console.SetIn(reader);
+            
+            var product = Inventory.AddNewProduct();
+            var listLengthBeforeDeletion = Inventory.ProductsList.Count;
+            
+            var isSuccess = Inventory.RemoveProductByName(product.ProductName);
+
+            // -- Act.
+            const int actual = 1;
+            var listLengthAfterDeletion = Inventory.ProductsList.Count;
+            
+            // -- Assert.
+            Assert.AreEqual(isSuccess, actual);
+            Assert.AreEqual(listLengthAfterDeletion, (listLengthBeforeDeletion - 1));
+        }
+        
+        
+        [Test]
+        public void RemoveProductByProductNameInvalid()
+        {
+            // -- Arrange.
+            var isSuccess = Inventory.RemoveProductByName("");
+
+            // -- Act.
+            const int actual = -1;
+            
+            // -- Assert.
+            Assert.AreEqual(isSuccess, actual);
+        }
     }
 }
