@@ -4,10 +4,11 @@ namespace IMS.BL
     {
         public Product()
         {
-            _lastProductId = GenerateNewProductId();
+            ProductId = _lastProductId = GenerateNewProductId();
         }
 
         private static int _lastProductId = 0;
+        public int ProductId { get; private set; }
         public string ProductName { get; set; }
         public decimal ProductPrice { get; set; }
         public int ProductQuantity { get; set; }
