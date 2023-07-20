@@ -1,0 +1,6 @@
+/home/moustf/loving_backend/c#/IMS/IMS.BL/bin/Debug/IMS.BL.exe
+/home/moustf/loving_backend/c#/IMS/IMS.BL/bin/Debug/IMS.BL.pdb
+/home/moustf/loving_backend/c#/IMS/IMS.BL/obj/Debug/IMS.BL.csproj.AssemblyReference.cache
+/home/moustf/loving_backend/c#/IMS/IMS.BL/obj/Debug/IMS.BL.csproj.CoreCompileInputs.cache
+/home/moustf/loving_backend/c#/IMS/IMS.BL/obj/Debug/IMS.BL.exe
+/home/moustf/loving_backend/c#/IMS/IMS.BL/obj/Debug/IMS.BL.pdb
