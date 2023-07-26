@@ -1,3 +1,4 @@
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -5,6 +6,7 @@ namespace IMS.BL
 {
     public static class InventoryRepository
     {
+        
         /// <summary>
         /// Retrieve all inventory products.
         /// </summary>
@@ -24,11 +26,12 @@ namespace IMS.BL
             return stringProductsList;
         }
         
+        // replace with search
         /// <summary>
         /// Retrieve one product from the inventory class.
         /// </summary>
         /// <returns>string</returns>
-        public static string RetrieveOneProduct(string productName)
+        public static string RetrieveOneProduct(string productName) // retrieveis used with id usually 
         {
             var product = Inventory.ProductsList.SingleOrDefault(prod => prod.ProductName == productName);
             

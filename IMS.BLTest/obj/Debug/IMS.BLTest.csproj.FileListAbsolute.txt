@@ -9,3 +9,5 @@
 /home/moustf/loving_backend/c#/IMS/IMS.BLTest/obj/Debug/IMS.BLTest.csproj.CopyComplete
 /home/moustf/loving_backend/c#/IMS/IMS.BLTest/obj/Debug/IMS.BLTest.dll
 /home/moustf/loving_backend/c#/IMS/IMS.BLTest/obj/Debug/IMS.BLTest.pdb
+C:\Users\hp\Documents\GitHub\IMS\IMS.BLTest\obj\Debug\IMS.BLTest.csproj.AssemblyReference.cache
+C:\Users\hp\Documents\GitHub\IMS\IMS.BLTest\obj\Debug\IMS.BLTest.csproj.CoreCompileInputs.cache

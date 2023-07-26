@@ -2,12 +2,23 @@ using System;
 
 namespace IMS.BL
 {
+    // why using struct ? 
+    // for such models that carry data and that all its job you can use record
+    // record is immutable and for one way flow, also simple
+    // struct has a data size limit of 16 bytes and it is not for complex models like this one 
+    //public record Person(string ProductName, decimal ProductPrice, string ProductQuantity);
+
     public struct ProductInfo
     {
-        public string ProductName { get; private set; }
-        public decimal ProductPrice { get; private set; }
-        public int ProductQuantity { get; private set; }
+        public string ProductName { get; set; }
+        public decimal ProductPrice { get; set; }
+        public int ProductQuantity { get; set; }
 
+        // single responsibility violation, models and DTOs (models that carry data between class / layers of the application)
+        // should not include logic that is not part of there concerns 
+        // this should only be a DTO, a career of data with no methods at all and not static once in particular 
+
+        // move all of this into another class, maybe the program ? 
         public static ProductInfo GetProductFromUserInput()
         {
             var productInfo = new ProductInfo();
