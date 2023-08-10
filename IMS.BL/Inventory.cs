@@ -1,65 +1,52 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Authentication.ExtendedProtection;
+using AutoMapper;
+using System;
 
 namespace IMS.BL
 {
-    public static class Inventory
+    public class Inventory
     {
-        static Inventory()
+        public Inventory()
         {
-            ProductsList = new List<Product>();
+            ProductsList = new Dictionary<string, Product>();
         }
 
-        public static List<Product> ProductsList { get; private set; }
+        public  Dictionary<string, Product> ProductsList { get; private set; }
 
-        public static Product AddNewProduct()
+        public  Product AddNewProduct(ProductData productData, Mapper mapper)
         {
-            var productInfo = ProductInfo.GetProductFromUserInput();
-
-            var product = new Product()
-            {
-                ProductName = productInfo.ProductName,
-                ProductPrice = productInfo.ProductPrice,
-                ProductQuantity = productInfo.ProductQuantity,
-
-            };
+            var product = mapper.Map<ProductData, Product>(productData);
             
-            ProductsList.Add(product);
+            ProductsList.Add(productData.ProductName, product);
 
             return product;
         }
 
-        public static Product EditProductByName(string productName)
+        public void EditProductByName(string productName, ProductData productData)
         {
-            var product = ProductsList.SingleOrDefault(prod => prod.ProductName == productName);
+            var product = ProductsList.Values.SingleOrDefault(prod => prod.ProductName == productName);
 
             if (product == null)
             {
-                return null;
+                throw new NullReferenceException("No products can be found.");
             }
             
-            var productInfo = ProductInfo.GetProductFromUserInput();
-            product.ProductName = productInfo.ProductName;
-            product.ProductPrice = productInfo.ProductPrice;
-            product.ProductQuantity = productInfo.ProductQuantity;
-
-            return product;
+            product.ProductName = productData.ProductName;
+            product.ProductPrice = productData.ProductPrice;
+            product.ProductQuantity = productData.ProductQuantity;
         }
 
-        public static int RemoveProductByName(string productName)
+        public void RemoveProductByName(string productName)
         {
-            var product = ProductsList.SingleOrDefault(prod => prod.ProductName == productName);
+            var product = ProductsList.Values.SingleOrDefault(prod => prod.ProductName == productName);
             
             if (product == null)
             {
-                return -1;
+                throw new NullReferenceException("The product you are trying to delete does not exist.");
             }
             
-            ProductsList.RemoveAt(ProductsList.FindIndex(prod => prod.ProductName == productName));
-
-            return 1;
+            ProductsList.Remove(productName);
         }
     }
 }

@@ -1,25 +1,22 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace IMS.BL
 {
-    public static class InventoryRepository
+    public class InventoryRepository
     {
         /// <summary>
         /// Retrieve all inventory products.
         /// </summary>
-        /// <returns>List<string></returns>
-        public static List<string> RetrieveAllProducts()
+        /// <returns>List of strings</returns>
+        public IEnumerable<string> GetAllProducts(Dictionary<string, Product> productsList)
         {
-            var productsList = Inventory.ProductsList;
-            var stringProductsList = new List<string>();
+            var products = productsList.Values;
 
-            foreach (var product in productsList)
-            {
-                stringProductsList.Add(
-                    $"Product num: {product.ProductId}, got a name of: {product.ProductName}, costs: {product.ProductPrice}, and we've got: {product.ProductQuantity} of it!"
-                    );
-            }
+            var stringProductsList = products.Select(product => 
+                $"Product num: {product.ProductId}, got a name of: {product.ProductName}, costs: {product.ProductPrice}, and we've got: {product.ProductQuantity} of it!"
+            );
 
             return stringProductsList;
         }
@@ -28,13 +25,14 @@ namespace IMS.BL
         /// Retrieve one product from the inventory class.
         /// </summary>
         /// <returns>string</returns>
-        public static string RetrieveOneProduct(string productName)
+        public string SearchForOneProduct(string productName, Dictionary<string, Product> productsList)
         {
-            var product = Inventory.ProductsList.SingleOrDefault(prod => prod.ProductName == productName);
+            var products = productsList.Values;
+            var product = products.SingleOrDefault(prod => prod.ProductName == productName);
             
             if (product == null)
             {
-                return "The product you are searching for doesn't exist on the inventory store!";
+                throw new NullReferenceException("No products can be found.");
             }
 
             return
