@@ -7,3 +7,14 @@
 /home/moustf/loving_backend/c#/IMS/IMS.BL/bin/Debug/AutoMapper.dll
 /home/moustf/loving_backend/c#/IMS/IMS.BL/bin/Debug/AutoMapper.xml
 /home/moustf/loving_backend/c#/IMS/IMS.BL/obj/Debug/IMS.BL.csproj.CopyComplete
+/home/moustf/loving_backend/FTS/c#/IMS/IMS.BL/bin/Debug/IMS.BL.exe
+/home/moustf/loving_backend/FTS/c#/IMS/IMS.BL/bin/Debug/IMS.BL.pdb
+/home/moustf/loving_backend/FTS/c#/IMS/IMS.BL/bin/Debug/AutoMapper.dll
+/home/moustf/loving_backend/FTS/c#/IMS/IMS.BL/bin/Debug/IMS.DL.exe
+/home/moustf/loving_backend/FTS/c#/IMS/IMS.BL/bin/Debug/IMS.DL.pdb
+/home/moustf/loving_backend/FTS/c#/IMS/IMS.BL/bin/Debug/AutoMapper.xml
+/home/moustf/loving_backend/FTS/c#/IMS/IMS.BL/obj/Debug/IMS.BL.csproj.AssemblyReference.cache
+/home/moustf/loving_backend/FTS/c#/IMS/IMS.BL/obj/Debug/IMS.BL.csproj.CoreCompileInputs.cache
+/home/moustf/loving_backend/FTS/c#/IMS/IMS.BL/obj/Debug/IMS.BL.csproj.CopyComplete
+/home/moustf/loving_backend/FTS/c#/IMS/IMS.BL/obj/Debug/IMS.BL.exe
+/home/moustf/loving_backend/FTS/c#/IMS/IMS.BL/obj/Debug/IMS.BL.pdb

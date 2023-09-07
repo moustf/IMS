@@ -2,51 +2,42 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using System;
+using IMS.BL.DataService;
+using IMS.DL.SqlDatabaseConnection;
 
 namespace IMS.BL
 {
     public class Inventory
     {
-        public Inventory()
+        private readonly DataAccess _dataAccess;
+        public Inventory(DataAccess dataAccess)
         {
-            ProductsList = new Dictionary<string, Product>();
+            _dataAccess = dataAccess;
         }
 
-        public  Dictionary<string, Product> ProductsList { get; private set; }
-
-        public  Product AddNewProduct(ProductData productData, Mapper mapper)
+        public  bool AddNewProduct(ProductData productData)
         {
-            var product = mapper.Map<ProductData, Product>(productData);
-            
-            ProductsList.Add(productData.ProductName, product);
-
-            return product;
+            return _dataAccess.InsertProduct(productData);
         }
 
-        public void EditProductByName(string productName, ProductData productData)
+        public void EditProduct(int productId, ProductData productData)
         {
-            var product = ProductsList.Values.SingleOrDefault(prod => prod.ProductName == productName);
+            var product = _dataAccess.UpdateProduct(productId, productData);
 
             if (product == null)
             {
                 throw new NullReferenceException("No products can be found.");
             }
-            
-            product.ProductName = productData.ProductName;
-            product.ProductPrice = productData.ProductPrice;
-            product.ProductQuantity = productData.ProductQuantity;
         }
 
-        public void RemoveProductByName(string productName)
+        public void RemoveProduct(int productId)
         {
-            var product = ProductsList.Values.SingleOrDefault(prod => prod.ProductName == productName);
+            var isDeleted = _dataAccess.DeleteProduct(productId);
             
-            if (product == null)
+            if (isDeleted == null)
             {
                 throw new NullReferenceException("The product you are trying to delete does not exist.");
             }
-            
-            ProductsList.Remove(productName);
         }
     }
 }

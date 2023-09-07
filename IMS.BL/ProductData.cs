@@ -2,5 +2,5 @@ using System;
 
 namespace IMS.BL
 {
-    public record ProductData(string ProductName, decimal ProductPrice, int ProductQuantity);
+    public record ProductData(string Name, decimal Price, int Quantity);
 }

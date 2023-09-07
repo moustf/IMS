@@ -44,6 +44,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="DataService\DataAccess.cs" />
         <Compile Include="GetProductData.cs" />
         <Compile Include="IsExternalInit.cs" />
         <Compile Include="MapperConfig.cs" />
@@ -56,6 +57,12 @@
     </ItemGroup>
     <ItemGroup>
       <None Include="packages.config" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\IMS.DL\IMS.DL.csproj">
+        <Project>{c02988a9-f326-4d7b-9671-8384756609ed}</Project>
+        <Name>IMS.DL</Name>
+      </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
