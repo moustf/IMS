@@ -1,21 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using IMS.BL.DataService;
 
 namespace IMS.BL
 {
     public class InventoryRepository
     {
+        private readonly DataAccess _dataAccess;
+
+        public InventoryRepository(DataAccess dataAccess)
+        {
+            _dataAccess = dataAccess;
+        }
+        
         /// <summary>
         /// Retrieve all inventory products.
         /// </summary>
         /// <returns>List of strings</returns>
-        public IEnumerable<string> GetAllProducts(Dictionary<string, Product> productsList)
+        public async Task<IEnumerable<string>> GetAllProducts()
         {
-            var products = productsList.Values;
+            var products = await _dataAccess.GetAllProducts();
 
             var stringProductsList = products.Select(product => 
-                $"Product num: {product.ProductId}, got a name of: {product.ProductName}, costs: {product.ProductPrice}, and we've got: {product.ProductQuantity} of it!"
+                $"Product num: {product.Id}, got a name of: {product.Name}, costs: {product.Price}, and we've got: {product.Quantity} of it!"
             );
 
             return stringProductsList;
@@ -25,10 +34,9 @@ namespace IMS.BL
         /// Retrieve one product from the inventory class.
         /// </summary>
         /// <returns>string</returns>
-        public string SearchForOneProduct(string productName, Dictionary<string, Product> productsList)
+        public async Task<string> SearchForOneProduct(string productId)
         {
-            var products = productsList.Values;
-            var product = products.SingleOrDefault(prod => prod.ProductName == productName);
+            var product = await _dataAccess.GetOneProduct(productId);
             
             if (product == null)
             {
@@ -36,7 +44,7 @@ namespace IMS.BL
             }
 
             return
-                $"Product num: {product.ProductId}, got a name of: {product.ProductName}, costs: {product.ProductPrice}, and we've got: {product.ProductQuantity} of it!";
+                $"Product num: {product.Id}, got a name of: {product.Name}, costs: {product.Price}, and we've got: {product.Quantity} of it!";
         }
     }
 }

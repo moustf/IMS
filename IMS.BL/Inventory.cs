@@ -1,52 +1,44 @@
-using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
 using System;
+using System.Threading.Tasks;
+using IMS.BL.DataService;
 
 namespace IMS.BL
 {
     public class Inventory
     {
-        public Inventory()
+        private readonly DataAccess _dataAccess;
+        public Inventory(DataAccess dataAccess)
         {
-            ProductsList = new Dictionary<string, Product>();
+            _dataAccess = dataAccess;
         }
 
-        public  Dictionary<string, Product> ProductsList { get; private set; }
-
-        public  Product AddNewProduct(ProductData productData, Mapper mapper)
+        public  async Task<bool> AddNewProduct(ProductData productData)
         {
-            var product = mapper.Map<ProductData, Product>(productData);
+            return await _dataAccess.InsetProduct(productData);
+        }
+
+        public async Task<bool> EditProductByName(string productId, ProductData productData)
+        {
+            var isUpdated = await _dataAccess.UpdateProduct(productId, productData);
             
-            ProductsList.Add(productData.ProductName, product);
-
-            return product;
-        }
-
-        public void EditProductByName(string productName, ProductData productData)
-        {
-            var product = ProductsList.Values.SingleOrDefault(prod => prod.ProductName == productName);
-
-            if (product == null)
+            if (!isUpdated)
             {
                 throw new NullReferenceException("No products can be found.");
             }
-            
-            product.ProductName = productData.ProductName;
-            product.ProductPrice = productData.ProductPrice;
-            product.ProductQuantity = productData.ProductQuantity;
+
+            return isUpdated;
         }
 
-        public void RemoveProductByName(string productName)
+        public async Task<bool> RemoveProduct(string productId)
         {
-            var product = ProductsList.Values.SingleOrDefault(prod => prod.ProductName == productName);
+            var isDeleted = await _dataAccess.DeleteProduct(productId);
             
-            if (product == null)
+            if (!isDeleted)
             {
                 throw new NullReferenceException("The product you are trying to delete does not exist.");
             }
-            
-            ProductsList.Remove(productName);
+
+            return isDeleted;
         }
     }
 }

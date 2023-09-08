@@ -18,12 +18,12 @@ namespace IMS.BL
             return new ProductData(productName, productPrice, productQuantity);
         }
 
-        public string GetProductName()
+        public string GetProductId()
         {
-            Console.WriteLine("Please specify the product name you want to edit.");
-            var productName = Console.ReadLine();
+            Console.WriteLine("Please specify the product id you want.");
+            var productId = Console.ReadLine();
 
-            return productName;
+            return productId;
         }
     }
 }

@@ -1,16 +1,21 @@
 ﻿using System;
+using System.Threading.Tasks;
+using IMS.BL.DataService;
+using IMS.Mongo.DL.Documents;
+using IMS.Mongo.DL.MongoDbConnection;
 
 namespace IMS.BL
 {
     internal class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             Console.WriteLine("Please choose what operation you want to perform.");
             Console.WriteLine("1 --> Add New Product.");
             Console.WriteLine("2 --> Edit Existing Product.");
-            Console.WriteLine("3 --> Search For A Product.");
-            Console.WriteLine("4 --> Get All Products.");
+            Console.WriteLine("3 --> Delete Existing Product.");
+            Console.WriteLine("4 --> Search For A Product.");
+            Console.WriteLine("5 --> Get All Products.");
             Console.WriteLine("0 --> Exit.");
             
             int choice;
@@ -20,10 +25,11 @@ namespace IMS.BL
             }           
             
             // Required objects.
-            var mapperConfig = new MapperConfig();
-            var mapper = mapperConfig.InitializeAutomapper();
-            var inventory = new Inventory();
-            var inventoryRepository = new InventoryRepository();
+            var mongoClient = MongoConnectionProvider.Instance.MongoClient;
+            var productsDocument = new GetCollections(mongoClient).GetProductsCollection();
+            var dataAccess = new DataAccess(productsDocument);
+            var inventory = new Inventory(dataAccess);
+            var inventoryRepository = new InventoryRepository(dataAccess);
             var getProductData = new GetProductData();
 
             try
@@ -33,40 +39,51 @@ namespace IMS.BL
                     case 1:
                     {
                         var productData = getProductData.GetProductFromUserInput();
-                        var product = inventory.AddNewProduct(productData, mapper);
-                    
-                        Console.WriteLine($"Product {product.ProductName} is added successfully!");
+                        var isInserted = await inventory.AddNewProduct(productData);
+
+                        Console.WriteLine(isInserted
+                            ? $"The product has been added successfully!"
+                            : $"Something went wrong while adding the product.");
                         break;
                     }
                     case 2:
                     {
-                        var productName = getProductData.GetProductName();
+                        var productId = getProductData.GetProductId();
                         var productData = getProductData.GetProductFromUserInput();
-                        inventory.EditProductByName(productName, productData);
+                        var isUpdated = await inventory.EditProductByName(productId, productData);
                     
-                        Console.WriteLine($"Product {productName} got edited successfully!");
+                        if (isUpdated) Console.WriteLine($"The product has been edited successfully!");
                         break;
                     }
                     case 3:
                     {
-                        var productName = getProductData.GetProductName();
-                        var productsList = inventory.ProductsList;
-                        var productString = inventoryRepository.SearchForOneProduct(productName, productsList);
-                    
-                        Console.WriteLine($"The product you are searching for: {productString}");
+                        var productId = getProductData.GetProductId();
+                        var isDeleted = await inventory.RemoveProduct(productId);
+
+                        Console.WriteLine(isDeleted
+                            ? "The product has been deleted successfully"
+                            : "Something wrong happened while deleting the product!");
+
                         break;
                     }
                     case 4:
                     {
-                        var productsList = inventory.ProductsList;
-                        var products = inventoryRepository.GetAllProducts(productsList);
+                        var productId = getProductData.GetProductId();
+                        var productString = await inventoryRepository.SearchForOneProduct(productId);
+                    
+                        Console.WriteLine($"The product you are searching for: {productString}");
+                        break;
+                    }
+                    case 5:
+                    {
+                        var products = await inventoryRepository.GetAllProducts();
                     
                         Console.WriteLine("The list of the products you have is:");
                         foreach (var product in products)
                         {
                             Console.WriteLine(product);
                         }
-
+            
                         break;
                     }
                     case 0:
@@ -84,21 +101,3 @@ namespace IMS.BL
         }
     }
 }
-
-// while (!int.TryParse(Console.ReadLine(), out productInfoProductQuantity))
-// {
-//     Console.WriteLine("Enter a valid product quantity, please.");
-// }
-// productInfo.ProductQuantity = productInfoProductQuantity;
-
-// while (!decimal.TryParse(Console.ReadLine(), out productInfoProductPrice))
-// {
-//     Console.WriteLine("Enter a valid product price, please.");
-// }
-// productInfo.ProductPrice = productInfoProductPrice;
-
-// while (string.IsNullOrWhiteSpace(productInfo.ProductName))
-// {
-//     Console.WriteLine("Enter a valid product name, please.");
-//     productInfo.ProductName = Console.ReadLine();
-// }
