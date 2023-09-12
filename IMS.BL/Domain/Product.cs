@@ -1,6 +1,4 @@
-using System;
-
-namespace IMS.BL
+namespace IMS.BL.Domain
 {
     public class Product
     {

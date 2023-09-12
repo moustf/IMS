@@ -1,8 +1,10 @@
 ﻿using System;
-using IMS.BL.DataService;
-using IMS.DL.SqlDatabaseConnection;
+using System.Linq;
+using IMS.BL.Database.DatabaseConnections.SqlDatabaseConnection;
+using IMS.BL.Domain;
+using IMS.BL.Repositories;
 
-namespace IMS.BL
+namespace IMS.BL.Application
 {
     internal class Program
     {
@@ -23,10 +25,10 @@ namespace IMS.BL
             }           
             
             // Required objects.
-            var dataAccess = new DataAccess(SqlConnectionProvider.Instance.SqlConnectionObject);
-            var mapperConfig = new MapperConfig();
-            var inventory = new Inventory(dataAccess);
-            var inventoryRepository = new InventoryRepository(dataAccess);
+            var sqlConnection = SqlConnectionProvider.Instance.SqlConnectionObject;
+            var sqlInventoryRepository = new SqlInventoryRepository(sqlConnection);
+            var inventoryRepository = new InventoryRepository();
+            inventoryRepository.SetInventoryRepository(sqlInventoryRepository);
             var getProductData = new GetProductData();
             
             try
@@ -35,17 +37,16 @@ namespace IMS.BL
                 {
                     case 1:
                     {
-                        var productData = getProductData.GetProductFromUserInput();
-                        var isAdded = inventory.AddNewProduct(productData);
+                        var productData = getProductData.GetProductToAdd();
+                        inventoryRepository.AddNewProduct(productData);
                     
-                        if (isAdded) Console.WriteLine($"The product has been added successfully!");
+                        Console.WriteLine($"The product has been added successfully!");
                         break;
                     }
                     case 2:
                     {
-                        var productId = getProductData.GetProductId();
-                        var productData = getProductData.GetProductFromUserInput();
-                        inventory.EditProduct(productId, productData);
+                        var product = getProductData.GetProductToModify();
+                        inventoryRepository.EditProduct(product);
                     
                         Console.WriteLine($"The product has been updated successfully!");
                         break;
@@ -53,7 +54,7 @@ namespace IMS.BL
                     case 3:
                     {
                         var productId = getProductData.GetProductId();
-                        inventory.RemoveProduct(productId);
+                        inventoryRepository.RemoveProduct(productId);
                     
                         Console.WriteLine($"The product has been deleted successfully!");
                         
@@ -62,19 +63,24 @@ namespace IMS.BL
                     case 4:
                     {
                         var productId = getProductData.GetProductId();
-                        var productString = inventoryRepository.SearchForOneProduct(productId);
+                        var product = inventoryRepository.GetOneProduct(productId);
                     
-                        Console.WriteLine($"The product you are searching for: {productString}");
+                        Console.WriteLine($"The product with id of: {product.Id} has a name of {product.Name}, its cost is {product.Price}, and {product.Quantity} products are available!");
                         break;
                     }
                     case 5:
                     {
                         var products = inventoryRepository.GetAllProducts();
+
+                        if (!products.Any())
+                        {
+                            throw new NullReferenceException();
+                        }
                     
                         Console.WriteLine("The list of the products you have is:");
                         foreach (var product in products)
                         {
-                            Console.WriteLine(product);
+                            Console.WriteLine($"The product with id of: {product.Id} has a name of {product.Name}, its cost is {product.Price}, and {product.Quantity} products are available!");
                         }
             
                         break;
@@ -88,12 +94,9 @@ namespace IMS.BL
             }
             catch (Exception e)
             {
-                if (e.GetType() == typeof(NullReferenceException))
-                {
-                    Console.WriteLine("There are no products with the provided data!");
-                }
-                
-                Console.WriteLine("The data you entered is not valid, please try again and provide a valid data!");
+                Console.WriteLine(e.GetType() == typeof(NullReferenceException)
+                    ? "There are no products with the provided data!"
+                    : "The data you entered is not valid, please try again and provide a valid data!");
                 Environment.Exit(1);
             }
         }

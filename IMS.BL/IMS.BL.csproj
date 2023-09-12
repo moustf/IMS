@@ -44,25 +44,22 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="DataService\DataAccess.cs" />
-        <Compile Include="GetProductData.cs" />
-        <Compile Include="IsExternalInit.cs" />
-        <Compile Include="MapperConfig.cs" />
-        <Compile Include="ProductData.cs" />
-        <Compile Include="Inventory.cs" />
-        <Compile Include="InventoryRepository.cs" />
-        <Compile Include="Product.cs" />
-        <Compile Include="Program.cs" />
+        <Compile Include="Application\Program.cs" />
+        <Compile Include="Database\DatabaseConnection.cs" />
+        <Compile Include="Database\DatabaseConnections\IDbTypeConnection.cs" />
+        <Compile Include="Database\DatabaseConnections\SqlDatabaseConnection\MsSqlConnection.cs" />
+        <Compile Include="Database\DatabaseConnections\SqlDatabaseConnection\SqlConnectionProvider.cs" />
+        <Compile Include="Domain\GetProductData.cs" />
+        <Compile Include="Domain\IsExternalInit.cs" />
+        <Compile Include="Domain\Product.cs" />
+        <Compile Include="Domain\ProductData.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="Repositories\IInventoryRepository.cs" />
+        <Compile Include="Repositories\InventoryRepository.cs" />
+        <Compile Include="Repositories\SqlInventoryRepository.cs" />
     </ItemGroup>
     <ItemGroup>
       <None Include="packages.config" />
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\IMS.DL\IMS.DL.csproj">
-        <Project>{c02988a9-f326-4d7b-9671-8384756609ed}</Project>
-        <Name>IMS.DL</Name>
-      </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
