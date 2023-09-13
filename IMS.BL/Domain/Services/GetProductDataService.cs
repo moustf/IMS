@@ -1,9 +1,9 @@
 using System;
 using MongoDB.Bson;
 
-namespace IMS.BL.Domain
+namespace IMS.BL.Domain.Services
 {
-    public class GetProductData
+    public class GetProductDataService
     {
         public ProductData GetProductDataExceptId()
         {
