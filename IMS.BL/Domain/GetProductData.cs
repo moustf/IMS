@@ -1,4 +1,5 @@
 using System;
+using MongoDB.Bson;
 
 namespace IMS.BL.Domain
 {
@@ -21,7 +22,13 @@ namespace IMS.BL.Domain
         public Product GetProductToModify()
         {
             Console.WriteLine("Please specify the product id you choose to perform the operation on.");
-            var productId = int.Parse(Console.ReadLine() ?? "0");
+            var productId = Console.ReadLine();
+
+            while (!ObjectId.TryParse(productId, out var id) && !int.TryParse(productId, out var num))
+            {
+                Console.WriteLine("Please specify a valid number or object id!");
+                productId = Console.ReadLine();
+            }
 
             var productData = GetProductDataExceptId();
 
@@ -46,10 +53,16 @@ namespace IMS.BL.Domain
             };
         }
 
-        public int GetProductId()
+        public string GetProductId()
         {
             Console.WriteLine("Please specify the product id you choose to perform the operation on.");
-            var productId = int.Parse(Console.ReadLine() ?? "0");
+            var productId = Console.ReadLine();
+
+            while (!ObjectId.TryParse(productId, out var id) && !int.TryParse(productId, out var num))
+            {
+                Console.WriteLine("Please specify a valid number or object id!");
+                productId = Console.ReadLine();
+            }
 
             return productId;
         }
