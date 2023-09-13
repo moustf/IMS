@@ -49,14 +49,15 @@
         <Compile Include="Database\DatabaseConnections\IDbTypeConnection.cs" />
         <Compile Include="Database\DatabaseConnections\SqlDatabaseConnection\MsSqlConnection.cs" />
         <Compile Include="Database\DatabaseConnections\SqlDatabaseConnection\SqlConnectionProvider.cs" />
-        <Compile Include="Domain\GetProductData.cs" />
+        <Compile Include="Domain\CustomExceptions\ProductException.cs" />
         <Compile Include="Domain\IsExternalInit.cs" />
         <Compile Include="Domain\Product.cs" />
         <Compile Include="Domain\ProductData.cs" />
+        <Compile Include="Domain\Services\GetProductDataService.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="Repositories\IInventoryRepository.cs" />
         <Compile Include="Repositories\InventoryRepository.cs" />
-        <Compile Include="Repositories\SqlInventoryRepository.cs" />
+        <Compile Include="Repositories\SqlInventoryService.cs" />
     </ItemGroup>
     <ItemGroup>
       <None Include="packages.config" />

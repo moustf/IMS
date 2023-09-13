@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Policy;
 using IMS.BL.Database.DatabaseConnections.SqlDatabaseConnection;
-using IMS.BL.Domain;
+using IMS.BL.Domain.CustomExceptions;
+using IMS.BL.Domain.Services;
 using IMS.BL.Repositories;
 
 namespace IMS.BL.Application
@@ -9,6 +11,11 @@ namespace IMS.BL.Application
     internal class Program
     {
         public static void Main(string[] args)
+        {
+            ProgramFlow();
+        }
+
+        private static void ProgramFlow()
         {
             Console.WriteLine("Please choose what operation you want to perform.");
             Console.WriteLine("1 --> Add New Product.");
@@ -26,78 +33,130 @@ namespace IMS.BL.Application
             
             // Required objects.
             var sqlConnection = SqlConnectionProvider.Instance.SqlConnectionObject;
-            var sqlInventoryRepository = new SqlInventoryRepository(sqlConnection);
+            var sqlInventoryRepository = new SqlInventoryService(sqlConnection);
             var inventoryRepository = new InventoryRepository();
             inventoryRepository.SetInventoryRepository(sqlInventoryRepository);
-            var getProductData = new GetProductData();
-            
+            var getProductData = new GetProductDataService();
+
             try
             {
                 switch (choice)
                 {
                     case 1:
                     {
-                        var productData = getProductData.GetProductToAdd();
-                        inventoryRepository.AddNewProduct(productData);
-                    
-                        Console.WriteLine($"The product has been added successfully!");
-                        break;
+                        try
+                        {
+                            var productData = getProductData.GetProductToAdd();
+                            inventoryRepository.AddNewProduct(productData);
+
+                            Console.WriteLine($"The product has been added successfully!");
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            throw new ProductException("Something went wrong while inserting new product! " +
+                                                       e.Message);
+                        }
                     }
                     case 2:
                     {
-                        var product = getProductData.GetProductToModify();
-                        inventoryRepository.EditProduct(product);
-                    
-                        Console.WriteLine($"The product has been updated successfully!");
-                        break;
+                        try
+                        {
+                            var product = getProductData.GetProductToModify();
+                            inventoryRepository.EditProduct(product);
+
+                            Console.WriteLine($"The product has been updated successfully!");
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            throw new ProductException("Something went wrong while editing the product! " + e.Message);
+                        }
                     }
                     case 3:
                     {
-                        var productId = getProductData.GetProductId();
-                        inventoryRepository.RemoveProduct(productId);
-                    
-                        Console.WriteLine($"The product has been deleted successfully!");
-                        
-                        break;
+                        try
+                        {
+                            var productId = getProductData.GetProductId();
+                            inventoryRepository.RemoveProduct(productId);
+
+                            Console.WriteLine($"The product has been deleted successfully!");
+
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            throw new ProductException("Something went wrong while removing the product! " + e.Message);
+                        }
                     }
                     case 4:
                     {
-                        var productId = getProductData.GetProductId();
-                        var product = inventoryRepository.GetOneProduct(productId);
-                    
-                        Console.WriteLine($"The product with id of: {product.Id} has a name of {product.Name}, its cost is {product.Price}, and {product.Quantity} products are available!");
-                        break;
+                        try
+                        {
+                            var productId = getProductData.GetProductId();
+                            var product = inventoryRepository.GetOneProduct(productId);
+
+                            Console.WriteLine(
+                                $"The product with id of: {product.Id} has a name of {product.Name}, its cost is {product.Price}, and {product.Quantity} products are available!");
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            throw new ProductException("Something went wrong while getting the product! " + e.Message);
+                        }
                     }
                     case 5:
                     {
-                        var products = inventoryRepository.GetAllProducts();
+                        try
+                        {
+                            var products = inventoryRepository.GetAllProducts();
 
-                        if (!products.Any())
-                        {
-                            throw new NullReferenceException();
+                            if (!products.Any())
+                            {
+                                throw new ProductException("No products were found!");
+                            }
+
+                            Console.WriteLine("The list of the products you have is:");
+                            foreach (var product in products)
+                            {
+                                Console.WriteLine(
+                                    $"The product with id of: {product.Id} has a name of {product.Name}, its cost is {product.Price}, and {product.Quantity} products are available!");
+                            }
+
+                            break;
                         }
-                    
-                        Console.WriteLine("The list of the products you have is:");
-                        foreach (var product in products)
+                        catch (Exception e)
                         {
-                            Console.WriteLine($"The product with id of: {product.Id} has a name of {product.Name}, its cost is {product.Price}, and {product.Quantity} products are available!");
+                            throw new ProductException("Something went wrong while getting all the products! " +
+                                                       e.Message);
                         }
-            
-                        break;
                     }
                     case 0:
                     {
+                        Console.WriteLine("You will be out of the program in a second, see you soon!");
                         Environment.Exit(0);
                         break;
                     }
                 }
             }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine("No products can be found!");
+                
+                ProgramFlow();
+            }
+            catch (ProductException pe)
+            {
+                Console.WriteLine(pe.Message);
+                
+                ProgramFlow();
+            }
             catch (Exception e)
             {
-                Console.WriteLine(e.GetType() == typeof(NullReferenceException)
-                    ? "There are no products with the provided data!"
-                    : "The data you entered is not valid, please try again and provide a valid data!");
-                Environment.Exit(1);
+                Console.WriteLine(e);
+                
+                Console.WriteLine("The data you entered is not valid, please try again and provide a valid data! " + e.Message);
+                ProgramFlow();
             }
         }
     }
