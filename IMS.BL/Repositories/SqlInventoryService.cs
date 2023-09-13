@@ -6,7 +6,7 @@ using IMS.BL.Domain;
 
 namespace IMS.BL.Repositories
 {
-    public class SqlInventoryService : IInventoryRepository
+    public class SqlInventoryService : IInventoryService
     {
         private readonly SqlConnection _sqlConnection;
 

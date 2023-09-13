@@ -148,9 +148,11 @@
         <Compile Include="Domain\ProductData.cs" />
         <Compile Include="Domain\Services\GetProductDataService.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="Repositories\IInventoryRepository.cs" />
+        <Compile Include="Repositories\IInventoryService.cs" />
+        <Compile Include="Repositories\IInventoryRepositoryFactory.cs" />
         <Compile Include="Repositories\InventoryRepository.cs" />
-        <Compile Include="Repositories\MongoInventoryRepository.cs" />
+        <Compile Include="Repositories\InventoryRepositoryFactory.cs" />
+        <Compile Include="Repositories\MongoInventoryService.cs" />
         <Compile Include="Repositories\SqlInventoryService.cs" />
     </ItemGroup>
     <ItemGroup>

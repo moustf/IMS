@@ -13,10 +13,10 @@ namespace IMS.BL.Application
     {
         public static async Task Main(string[] args)
         {
-            ProgramFlow();
+            await ProgramFlow();
         }
 
-        private static void ProgramFlow()
+        private static async Task ProgramFlow()
         {
             Console.WriteLine("Please choose what operation you want to perform.");
             Console.WriteLine("1 --> Add New Product.");
@@ -35,11 +35,11 @@ namespace IMS.BL.Application
             // Required objects.
             var mongoClient = MongoConnectionProvider.Instance.MongoClient;
             var productsCollection = new ProductCollection(mongoClient).GetProductCollection();
-            var mongoInventoryRepository = new MongoInventoryRepository(productsCollection);
-            
-            var inventoryRepository = new InventoryRepository();
-            inventoryRepository.SetInventoryRepository(mongoInventoryRepository);
-            var getProductData = new GetProductData();
+            var mongoInventoryRepository = new MongoInventoryService(productsCollection);
+
+            var inventoryRepoFactory = new InventoryRepositoryFactory(new InventoryRepository());
+            var inventoryRepository = inventoryRepoFactory.SetWithMongoInventoryService(mongoInventoryRepository);
+            var getProductData = new GetProductDataService();
             try
             {
                 switch (choice)
@@ -49,7 +49,7 @@ namespace IMS.BL.Application
                         try
                         {
                             var productData = getProductData.GetProductToAdd();
-                            inventoryRepository.AddNewProduct(productData);
+                            await inventoryRepository.AddNewProduct(productData);
 
                             Console.WriteLine($"The product has been added successfully!");
                             break;
@@ -65,7 +65,7 @@ namespace IMS.BL.Application
                         try
                         {
                             var product = getProductData.GetProductToModify();
-                            inventoryRepository.EditProduct(product);
+                            await inventoryRepository.EditProduct(product);
 
                             Console.WriteLine($"The product has been updated successfully!");
                             break;
@@ -80,7 +80,7 @@ namespace IMS.BL.Application
                         try
                         {
                             var productId = getProductData.GetProductId();
-                            inventoryRepository.RemoveProduct(productId);
+                            await inventoryRepository.RemoveProduct(productId);
 
                             Console.WriteLine($"The product has been deleted successfully!");
 
@@ -96,7 +96,7 @@ namespace IMS.BL.Application
                         try
                         {
                             var productId = getProductData.GetProductId();
-                            var product = inventoryRepository.GetOneProduct(productId);
+                            var product = await inventoryRepository.GetOneProduct(productId);
 
                             Console.WriteLine(
                                 $"The product with id of: {product.Id} has a name of {product.Name}, its cost is {product.Price}, and {product.Quantity} products are available!");
@@ -111,7 +111,7 @@ namespace IMS.BL.Application
                     {
                         try
                         {
-                            var products = inventoryRepository.GetAllProducts();
+                            var products = await inventoryRepository.GetAllProducts();
 
                             if (!products.Any())
                             {
@@ -145,20 +145,20 @@ namespace IMS.BL.Application
             {
                 Console.WriteLine("No products can be found!");
                 
-                ProgramFlow();
+                await ProgramFlow();
             }
             catch (ProductException pe)
             {
                 Console.WriteLine(pe.Message);
                 
-                ProgramFlow();
+                await ProgramFlow();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 
                 Console.WriteLine("The data you entered is not valid, please try again and provide a valid data! " + e.Message);
-                ProgramFlow();
+                await ProgramFlow();
             }
         }
     }

@@ -4,7 +4,7 @@ using IMS.BL.Domain;
 
 namespace IMS.BL.Repositories
 {
-    public interface IInventoryRepository
+    public interface IInventoryService
     {
         Task AddNewProduct(Product product);
         Task EditProduct(Product product);

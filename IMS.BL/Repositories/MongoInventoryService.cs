@@ -7,11 +7,11 @@ using MongoDB.Driver;
 
 namespace IMS.BL.Repositories
 {
-    public class MongoInventoryRepository : IInventoryRepository
+    public class MongoInventoryService : IInventoryService
     {
         private readonly IMongoCollection<BsonDocument> _productsCollection;
 
-        public MongoInventoryRepository(IMongoCollection<BsonDocument> productsCollection)
+        public MongoInventoryService(IMongoCollection<BsonDocument> productsCollection)
         {
             _productsCollection = productsCollection;
         }

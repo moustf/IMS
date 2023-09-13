@@ -6,11 +6,11 @@ namespace IMS.BL.Repositories
 {
     public class InventoryRepository
     {
-        private IInventoryRepository _inventoryRepository;
+        private IInventoryService _inventoryService;
 
-        public void SetInventoryRepository(IInventoryRepository inventoryRepository)
+        public void SetInventoryRepository(IInventoryService inventoryService)
         {
-            _inventoryRepository = inventoryRepository;
+            _inventoryService = inventoryService;
         }
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace IMS.BL.Repositories
         /// <returns></returns>
         public async Task AddNewProduct(Product product)
         {
-            await _inventoryRepository.AddNewProduct(product);
+            await _inventoryService.AddNewProduct(product);
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace IMS.BL.Repositories
         /// <returns></returns>
         public async Task EditProduct(Product product)
         {
-            await _inventoryRepository.EditProduct(product);
+            await _inventoryService.EditProduct(product);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace IMS.BL.Repositories
         /// <returns></returns>
         public async Task RemoveProduct(string id)
         {
-            await _inventoryRepository.RemoveProduct(id);
+            await _inventoryService.RemoveProduct(id);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace IMS.BL.Repositories
         /// <returns>List of products</returns>
         public async Task<IEnumerable<Product>> GetAllProducts()
         {
-            return await _inventoryRepository.GetAllProducts();
+            return await _inventoryService.GetAllProducts();
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace IMS.BL.Repositories
         /// <returns>Product</returns>
         public async Task<Product> GetOneProduct(string id)
         {
-            return await _inventoryRepository.GetOneProduct(id);
+            return await _inventoryService.GetOneProduct(id);
         }
     }
 }
