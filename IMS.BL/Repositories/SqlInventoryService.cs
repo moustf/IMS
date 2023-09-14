@@ -29,6 +29,8 @@ namespace IMS.BL.Repositories
                 
             sqlAdapter.InsertCommand = sqlCommand;
             sqlAdapter.InsertCommand.ExecuteNonQuery();
+            
+            _sqlConnection.Close();
         }
         
         public void EditProduct(Product product)
@@ -46,6 +48,8 @@ namespace IMS.BL.Repositories
                 
             sqlAdapter.UpdateCommand = sqlCommand;
             sqlAdapter.UpdateCommand.ExecuteNonQuery();
+            
+            _sqlConnection.Close();
         }
         
         public void RemoveProduct(int id)
@@ -60,25 +64,21 @@ namespace IMS.BL.Repositories
                 
             sqlAdapter.DeleteCommand = sqlCommand;
             sqlAdapter.DeleteCommand.ExecuteNonQuery();
+            
+            _sqlConnection.Close();
         }
 
         public IEnumerable<Product> GetAllProducts()
         {
             _sqlConnection.Open();
                 
-            var products = new List<Product>();
+            List<Product> products = null;
                 
             const string sql = "SELECT id, name, price, quantity FROM product";
             var sqlCommand = new SqlCommand(sql, _sqlConnection);
                 
             var dataReader = sqlCommand.ExecuteReader();
-            
-            if (!dataReader.HasRows)
-            {
-                
-                return new List<Product>();
-            }
-            
+
             while (dataReader.Read())
             {
                 var product = new Product()
@@ -100,7 +100,7 @@ namespace IMS.BL.Repositories
         {
             _sqlConnection.Open();
 
-            var product = new Product();
+            Product product = null;
             const string sql = @"SELECT id, name, price, quantity FROM product WHERE id = @Id";
             var sqlCommand = new SqlCommand(sql, _sqlConnection);
             sqlCommand.Parameters.AddWithValue("@Id", id);
@@ -117,6 +117,8 @@ namespace IMS.BL.Repositories
                     Quantity = int.Parse($"{dataReader.GetValue(3)}")
                 };
             }
+            
+            _sqlConnection.Close();
                 
             return product;
         }

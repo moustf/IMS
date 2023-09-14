@@ -49,7 +49,7 @@
         <Compile Include="Database\DatabaseConnections\IDbTypeConnection.cs" />
         <Compile Include="Database\DatabaseConnections\SqlDatabaseConnection\MsSqlConnection.cs" />
         <Compile Include="Database\DatabaseConnections\SqlDatabaseConnection\SqlConnectionProvider.cs" />
-        <Compile Include="Domain\CustomExceptions\ProductException.cs" />
+        <Compile Include="Domain\CustomExceptions\ProductNotFoundException.cs" />
         <Compile Include="Domain\IsExternalInit.cs" />
         <Compile Include="Domain\Product.cs" />
         <Compile Include="Domain\ProductData.cs" />
