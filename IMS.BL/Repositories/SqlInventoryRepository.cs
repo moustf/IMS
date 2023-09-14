@@ -5,11 +5,11 @@ using IMS.BL.Domain;
 
 namespace IMS.BL.Repositories
 {
-    public class SqlInventoryService : IInventoryRepository
+    public class SqlInventoryRepository : IInventoryRepository
     {
         private readonly SqlConnection _sqlConnection;
 
-        public SqlInventoryService(SqlConnection sqlConnection)
+        public SqlInventoryRepository(SqlConnection sqlConnection)
         {
             _sqlConnection = sqlConnection ?? throw new ArgumentNullException(nameof(sqlConnection), "sqlConnection cannot be null.");
         }

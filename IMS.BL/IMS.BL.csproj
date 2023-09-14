@@ -56,8 +56,8 @@
         <Compile Include="Domain\Services\GetProductDataService.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="Repositories\IInventoryRepository.cs" />
-        <Compile Include="Repositories\InventoryRepository.cs" />
-        <Compile Include="Repositories\SqlInventoryService.cs" />
+        <Compile Include="Repositories\InventoryService.cs" />
+        <Compile Include="Repositories\SqlInventoryRepository.cs" />
     </ItemGroup>
     <ItemGroup>
       <None Include="packages.config" />

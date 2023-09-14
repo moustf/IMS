@@ -32,9 +32,8 @@ namespace IMS.BL.Application
             
             // Required objects.
             var sqlConnection = SqlConnectionProvider.Instance.SqlConnectionObject;
-            var sqlInventoryRepository = new SqlInventoryService(sqlConnection);
-            var inventoryRepository = new InventoryRepository();
-            inventoryRepository.SetInventoryRepository(sqlInventoryRepository);
+            var sqlInventoryRepository = new SqlInventoryRepository(sqlConnection);
+            var inventoryRepository = new InventoryService(sqlInventoryRepository);
             var getProductData = new GetProductDataService();
 
             try

@@ -3,13 +3,13 @@ using IMS.BL.Domain;
 
 namespace IMS.BL.Repositories
 {
-    public class InventoryRepository
+    public class InventoryService
     {
         private IInventoryRepository _inventoryRepository;
 
-        public void SetInventoryRepository(IInventoryRepository inventoryRepository)
+        public InventoryService(IInventoryRepository inventoryService)
         {
-            _inventoryRepository = inventoryRepository;
+            _inventoryRepository = inventoryService;
         }
 
         /// <summary>
