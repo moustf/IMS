@@ -11,7 +11,7 @@ IF NOT EXISTS (
         CREATE TABLE product (
                                  id INT PRIMARY KEY IDENTITY(1, 1),
                                  name NVARCHAR(50) NOT NULL,
-                                 price DECIMAL(9, 2) NOT NULL,
+                                 price DECIMAL(12, 4) NOT NULL,
                                  quantity INT NOT NULL,
         )
     END;

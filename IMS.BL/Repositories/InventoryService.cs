@@ -4,13 +4,12 @@ using IMS.BL.Domain;
 
 namespace IMS.BL.Repositories
 {
-    public class InventoryRepository
+    public class InventoryService
     {
-        private IInventoryService _inventoryService;
-
-        public void SetInventoryRepository(IInventoryService inventoryService)
+        private IInventoryRepository _inventoryRepository;
+        public InventoryService(IInventoryRepository inventoryService)
         {
-            _inventoryService = inventoryService;
+            _inventoryRepository = inventoryService;
         }
 
         /// <summary>
@@ -19,7 +18,7 @@ namespace IMS.BL.Repositories
         /// <returns></returns>
         public async Task AddNewProduct(Product product)
         {
-            await _inventoryService.AddNewProduct(product);
+            await _inventoryRepository.AddNewProduct(product);
         }
 
         /// <summary>
@@ -28,7 +27,7 @@ namespace IMS.BL.Repositories
         /// <returns></returns>
         public async Task EditProduct(Product product)
         {
-            await _inventoryService.EditProduct(product);
+            await _inventoryRepository.EditProduct(product);
         }
 
         /// <summary>
@@ -37,7 +36,7 @@ namespace IMS.BL.Repositories
         /// <returns></returns>
         public async Task RemoveProduct(string id)
         {
-            await _inventoryService.RemoveProduct(id);
+            await _inventoryRepository.RemoveProduct(id);
         }
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace IMS.BL.Repositories
         /// <returns>List of products</returns>
         public async Task<IEnumerable<Product>> GetAllProducts()
         {
-            return await _inventoryService.GetAllProducts();
+            return await _inventoryRepository.GetAllProducts();
         }
 
         /// <summary>
@@ -55,7 +54,7 @@ namespace IMS.BL.Repositories
         /// <returns>Product</returns>
         public async Task<Product> GetOneProduct(string id)
         {
-            return await _inventoryService.GetOneProduct(id);
+            return await _inventoryRepository.GetOneProduct(id);
         }
     }
 }

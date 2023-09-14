@@ -6,11 +6,11 @@ using IMS.BL.Domain;
 
 namespace IMS.BL.Repositories
 {
-    public class SqlInventoryService : IInventoryService
+    public class SqlInventoryRepository : IInventoryRepository
     {
         private readonly SqlConnection _sqlConnection;
 
-        public SqlInventoryService(SqlConnection sqlConnection)
+        public SqlInventoryRepository(SqlConnection sqlConnection)
         {
             _sqlConnection = sqlConnection ?? throw new ArgumentNullException(nameof(sqlConnection), "sqlConnection cannot be null.");
         }
@@ -30,6 +30,8 @@ namespace IMS.BL.Repositories
                 
             sqlAdapter.InsertCommand = sqlCommand;
             await sqlAdapter.InsertCommand.ExecuteNonQueryAsync();
+            
+            _sqlConnection.Close();
         }
         
         public async Task EditProduct(Product product)
@@ -47,6 +49,8 @@ namespace IMS.BL.Repositories
                 
             sqlAdapter.UpdateCommand = sqlCommand;
             await sqlAdapter.UpdateCommand.ExecuteNonQueryAsync();
+            
+            _sqlConnection.Close();
         }
         
         public async Task RemoveProduct(string id)
@@ -61,13 +65,15 @@ namespace IMS.BL.Repositories
                 
             sqlAdapter.DeleteCommand = sqlCommand;
             await sqlAdapter.DeleteCommand.ExecuteNonQueryAsync();
+            
+            _sqlConnection.Close();
         }
 
         public async Task<IEnumerable<Product>>GetAllProducts()
         {
             _sqlConnection.Open();
                 
-            var products = new List<Product>();
+            List<Product> products = null;
                 
             const string sql = "SELECT id, name, price, quantity FROM product";
             var sqlCommand = new SqlCommand(sql, _sqlConnection);
@@ -79,7 +85,6 @@ namespace IMS.BL.Repositories
                 
                 return new List<Product>();
             }
-            
             while (dataReader.Read())
             {
                 var product = new Product()
@@ -101,7 +106,7 @@ namespace IMS.BL.Repositories
         {
             _sqlConnection.Open();
 
-            var product = new Product();
+            Product product = null;
             const string sql = @"SELECT id, name, price, quantity FROM product WHERE id = @Id";
             var sqlCommand = new SqlCommand(sql, _sqlConnection);
             sqlCommand.Parameters.AddWithValue("@Id", int.Parse(id));
@@ -118,6 +123,8 @@ namespace IMS.BL.Repositories
                     Quantity = int.Parse($"{dataReader.GetValue(3)}")
                 };
             }
+            
+            _sqlConnection.Close();
                 
             return product;
         }
