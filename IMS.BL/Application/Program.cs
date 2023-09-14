@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Linq;
-using IMS.BL.Database.DatabaseConnections.SqlDatabaseConnection;
+using System.Threading.Tasks;
+using IMS.BL.Database.DatabaseConnections.MongoDatabaseConnection;
+using IMS.BL.Database.DatabaseConnections.MongoDatabaseConnection.DDL;
 using IMS.BL.Domain.CustomExceptions;
 using IMS.BL.Domain.Services;
+using IMS.BL.Domain.CustomExceptions;
 using IMS.BL.Repositories;
 
 namespace IMS.BL.Application
 {
     internal class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            ProgramFlow();
+            await ProgramFlow();
         }
 
-        private static void ProgramFlow()
+        private static async Task ProgramFlow()
         {
             Console.WriteLine("Please choose what operation you want to perform.");
             Console.WriteLine("1 --> Add New Product.");
@@ -31,9 +34,10 @@ namespace IMS.BL.Application
             }           
             
             // Required objects.
-            var sqlConnection = SqlConnectionProvider.Instance.SqlConnectionObject;
-            var sqlInventoryRepository = new SqlInventoryRepository(sqlConnection);
-            var inventoryRepository = new InventoryService(sqlInventoryRepository);
+            var mongoClient = MongoConnectionProvider.Instance.MongoClient;
+            var productsCollection = new ProductCollection(mongoClient).GetProductCollection();
+            var mongoInventoryRepository = new MongoInventoryRepository(productsCollection);
+            var inventoryRepository = new InventoryService(mongoInventoryRepository);
             var getProductData = new GetProductDataService();
 
             try
@@ -43,7 +47,7 @@ namespace IMS.BL.Application
                     case 1:
                     {
                         var productData = getProductData.GetProductToAdd();
-                        inventoryRepository.AddNewProduct(productData);
+                        await inventoryRepository.AddNewProduct(productData);
 
                         Console.WriteLine($"The product has been added successfully!");
                         break;
@@ -51,7 +55,7 @@ namespace IMS.BL.Application
                     case 2:
                     {
                         var product = getProductData.GetProductToModify();
-                        inventoryRepository.EditProduct(product);
+                        await inventoryRepository.EditProduct(product);
 
                         Console.WriteLine($"The product has been updated successfully!");
                         break;
@@ -59,7 +63,7 @@ namespace IMS.BL.Application
                     case 3:
                     {
                         var productId = getProductData.GetProductId();
-                        inventoryRepository.RemoveProduct(productId);
+                        await inventoryRepository.RemoveProduct(productId);
 
                         Console.WriteLine($"The product has been deleted successfully!");
 
@@ -68,7 +72,7 @@ namespace IMS.BL.Application
                     case 4:
                     {
                         var productId = getProductData.GetProductId();
-                        var product = inventoryRepository.GetOneProduct(productId);
+                        var product = await inventoryRepository.GetOneProduct(productId);
 
                         if (product == null)
                         {
@@ -81,8 +85,8 @@ namespace IMS.BL.Application
                     }
                     case 5:
                     {
-                        var products = inventoryRepository.GetAllProducts();
-
+                        var products = await inventoryRepository.GetAllProducts();
+                        
                         if (!products.Any())
                         {
                             throw new ProductNotFoundException();
@@ -109,12 +113,12 @@ namespace IMS.BL.Application
             {
                 Console.WriteLine(pe.Message);
                 
-                ProgramFlow();
+                await ProgramFlow();
             }
             catch (Exception e)
             {
                 Console.WriteLine("The data you entered is not valid, please try again and provide a valid data! " + e.Message);
-                ProgramFlow();
+                await ProgramFlow();
             }
         }
     }

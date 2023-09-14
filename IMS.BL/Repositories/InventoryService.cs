@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using IMS.BL.Domain;
 
 namespace IMS.BL.Repositories
@@ -6,7 +7,6 @@ namespace IMS.BL.Repositories
     public class InventoryService
     {
         private IInventoryRepository _inventoryRepository;
-
         public InventoryService(IInventoryRepository inventoryService)
         {
             _inventoryRepository = inventoryService;
@@ -16,45 +16,45 @@ namespace IMS.BL.Repositories
         /// Appends a product into the database.
         /// </summary>
         /// <returns></returns>
-        public void AddNewProduct(Product product)
+        public async Task AddNewProduct(Product product)
         {
-            _inventoryRepository.AddNewProduct(product);
+            await _inventoryRepository.AddNewProduct(product);
         }
 
         /// <summary>
         /// Edit a product that exists in the database.
         /// </summary>
         /// <returns></returns>
-        public void EditProduct(Product product)
+        public async Task EditProduct(Product product)
         {
-            _inventoryRepository.EditProduct(product);
+            await _inventoryRepository.EditProduct(product);
         }
 
         /// <summary>
         /// Remove a product that exists in the database.
         /// </summary>
         /// <returns></returns>
-        public void RemoveProduct(int id)
+        public async Task RemoveProduct(string id)
         {
-            _inventoryRepository.RemoveProduct(id);
+            await _inventoryRepository.RemoveProduct(id);
         }
 
         /// <summary>
         /// Retrieve all inventory products.
         /// </summary>
         /// <returns>List of products</returns>
-        public IEnumerable<Product> GetAllProducts()
+        public async Task<IEnumerable<Product>> GetAllProducts()
         {
-            return _inventoryRepository.GetAllProducts();
+            return await _inventoryRepository.GetAllProducts();
         }
 
         /// <summary>
         /// Retrieve one product from the inventory class.
         /// </summary>
         /// <returns>Product</returns>
-        public Product GetOneProduct(int id)
+        public async Task<Product> GetOneProduct(string id)
         {
-            return _inventoryRepository.GetOneProduct(id);
+            return await _inventoryRepository.GetOneProduct(id);
         }
     }
 }

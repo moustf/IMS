@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using IMS.BL.Domain;
 
 namespace IMS.BL.Repositories
@@ -14,7 +15,7 @@ namespace IMS.BL.Repositories
             _sqlConnection = sqlConnection ?? throw new ArgumentNullException(nameof(sqlConnection), "sqlConnection cannot be null.");
         }
         
-        public void AddNewProduct(Product product)
+        public async Task AddNewProduct(Product product)
         {
             _sqlConnection.Open();
 
@@ -28,12 +29,12 @@ namespace IMS.BL.Repositories
             sqlCommand.Parameters.AddWithValue("@quantity", product.Quantity);
                 
             sqlAdapter.InsertCommand = sqlCommand;
-            sqlAdapter.InsertCommand.ExecuteNonQuery();
+            await sqlAdapter.InsertCommand.ExecuteNonQueryAsync();
             
             _sqlConnection.Close();
         }
         
-        public void EditProduct(Product product)
+        public async Task EditProduct(Product product)
         {
             _sqlConnection.Open();
 
@@ -41,18 +42,18 @@ namespace IMS.BL.Repositories
 
             var sql = @"UPDATE product SET name = @Name, price = @Price, quantity = @Quantity WHERE id = @Id";
             var sqlCommand = new SqlCommand(sql, _sqlConnection);
-            sqlCommand.Parameters.AddWithValue("@Id", product.Id);
+            sqlCommand.Parameters.AddWithValue("@Id", int.Parse(product.Id));
             sqlCommand.Parameters.AddWithValue("@Name", product.Name);
             sqlCommand.Parameters.AddWithValue("@Price", product.Price);
             sqlCommand.Parameters.AddWithValue("@Quantity", product.Quantity);
                 
             sqlAdapter.UpdateCommand = sqlCommand;
-            sqlAdapter.UpdateCommand.ExecuteNonQuery();
+            await sqlAdapter.UpdateCommand.ExecuteNonQueryAsync();
             
             _sqlConnection.Close();
         }
         
-        public void RemoveProduct(int id)
+        public async Task RemoveProduct(string id)
         {
             _sqlConnection.Open();
 
@@ -60,15 +61,15 @@ namespace IMS.BL.Repositories
 
             const string sql = @"DELETE product WHERE id = @Id";
             var sqlCommand = new SqlCommand(sql, _sqlConnection);
-            sqlCommand.Parameters.AddWithValue("@Id", id);
+            sqlCommand.Parameters.AddWithValue("@Id", int.Parse(id));
                 
             sqlAdapter.DeleteCommand = sqlCommand;
-            sqlAdapter.DeleteCommand.ExecuteNonQuery();
+            await sqlAdapter.DeleteCommand.ExecuteNonQueryAsync();
             
             _sqlConnection.Close();
         }
 
-        public IEnumerable<Product> GetAllProducts()
+        public async Task<IEnumerable<Product>>GetAllProducts()
         {
             _sqlConnection.Open();
                 
@@ -77,13 +78,18 @@ namespace IMS.BL.Repositories
             const string sql = "SELECT id, name, price, quantity FROM product";
             var sqlCommand = new SqlCommand(sql, _sqlConnection);
                 
-            var dataReader = sqlCommand.ExecuteReader();
-
+            var dataReader = await sqlCommand.ExecuteReaderAsync();
+            
+            if (!dataReader.HasRows)
+            {
+                
+                return new List<Product>();
+            }
             while (dataReader.Read())
             {
                 var product = new Product()
                 {
-                    Id = int.Parse($"{dataReader.GetValue(0)}"),
+                    Id = $"{dataReader.GetValue(0)}",
                     Name = $"{dataReader.GetValue(1)}",
                     Price = decimal.Parse($"{dataReader.GetValue(2)}"),
                     Quantity = int.Parse($"{dataReader.GetValue(3)}")
@@ -96,22 +102,22 @@ namespace IMS.BL.Repositories
             return products;
         }
         
-        public Product GetOneProduct(int id)
+        public async Task<Product> GetOneProduct(string id)
         {
             _sqlConnection.Open();
 
             Product product = null;
             const string sql = @"SELECT id, name, price, quantity FROM product WHERE id = @Id";
             var sqlCommand = new SqlCommand(sql, _sqlConnection);
-            sqlCommand.Parameters.AddWithValue("@Id", id);
+            sqlCommand.Parameters.AddWithValue("@Id", int.Parse(id));
                 
-            var dataReader = sqlCommand.ExecuteReader();
+            var dataReader = await sqlCommand.ExecuteReaderAsync();
 
             if (dataReader.Read())
             {
                 product = new Product()
                 {
-                    Id = int.Parse($"{dataReader.GetValue(0)}"),
+                    Id = $"{dataReader.GetValue(0)}",
                     Name = $"{dataReader.GetValue(1)}",
                     Price = decimal.Parse($"{dataReader.GetValue(2)}"),
                     Quantity = int.Parse($"{dataReader.GetValue(3)}")
